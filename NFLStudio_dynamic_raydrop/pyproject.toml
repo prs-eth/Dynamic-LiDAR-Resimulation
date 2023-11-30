@@ -1,0 +1,14 @@
+
+[project]
+name = "NFLStudio"
+version= "1.0.0"
+
+dependencies = [
+    "nerfstudio==0.3.4"
+]
+
+[tool.setuptools.packages.find]
+include = ["NFLStudio*","NFLStudio.NFL*", "NFLStudio.lidarsim*"]
+
+[project.entry-points.'nerfstudio.method_configs']
+my-method = 'NFLStudio.my_config:NFLStudio'
