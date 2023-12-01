@@ -23,18 +23,6 @@ class NFLDataManagerConfig(DataManagerConfig):
     eval_num_rays_per_batch: int = 2048
     """Number of rays per batch to use per eval iteration."""
 
-#     train_num_images_to_sample_from: int = -1
-#     """Number of images to sample during training iteration."""
-#     train_num_times_to_repeat_images: int = -1
-#     """When not training on all images, number of iterations before picking new
-#     images. If -1, never pick new images."""
-#     eval_num_images_to_sample_from: int = -1
-#     """Number of images to sample during eval iteration."""
-#     eval_num_times_to_repeat_images: int = -1
-#     """When not evaluating on all images, number of iterations before picking
-#     new images. If -1, never pick new images."""
-#     patch_size: int = 1
-#     """Size of patch to sample from. If >1, patch-based sampling will be used."""
 class NFLDataManager(DataManager):
     config: NFLDataManagerConfig
     train_dataset: Dataset
@@ -93,7 +81,6 @@ class NFLDataManager(DataManager):
         for key in ray_batch.keys():
             ray_batch[key] = ray_batch[key].to(self.device)
         self.train_count += 1
-        # mask = ray_batch['static_mask'].bool()
         static_ray_batch = ray_batch 
         static_ray_bundles = RayBundle(
             origins=static_ray_batch['rays_o'],
@@ -117,7 +104,6 @@ class NFLDataManager(DataManager):
                     directions=dynamic_ray_batch['rays_d'],
                     nears=None,
                     fars=None,
-                    # times=dynamic_ray_batch['time_stamp'][:,None],
                     times=None,
                     pixel_area=None
                 )
@@ -136,19 +122,13 @@ class NFLDataManager(DataManager):
         for key in ray_batch.keys():
             ray_batch[key] = ray_batch[key].to(self.device)
         self.eval_count += 1
-        # mask = ray_batch['first_mask'].bool()
         static_ray_batch = ray_batch
-        # print(ray_batch.keys())
-        # for key in ray_batch.keys():
-        #     # print(key)
-        #     static_ray_batch.update({key: ray_batch[key][mask].to(self.device)})
         ray_batch_list = [static_ray_batch] + [{} for i in range(self.train_dataset.dynamic_object_counter)]
         ray_bundles_list = [RayBundle(
             origins=static_ray_batch['rays_o'],
             directions=static_ray_batch['rays_d'],
             nears=None,
             fars=None,
-            # times=static_ray_batch['time_stamp'][:,None],
             times=None,
             pixel_area=None
         ) for i in range(1+self.train_dataset.dynamic_object_counter)]
@@ -164,29 +144,22 @@ class NFLDataManager(DataManager):
             ray_batch = next(self.iter_test_loader) 
         for key in self.train_dataset.float_args:
             ray_batch[key] = ray_batch[key].squeeze().float().to(self.device)
-        # mask = ray_batch['first_mask'].bool()
         for key in ray_batch.keys():
             ray_batch[key] = ray_batch[key].to(self.device)
         static_ray_batch = ray_batch 
-        # print(ray_batch.keys())
-        # for key in ray_batch.keys():
-            # print(key)
-            # static_ray_batch.update({key: ray_batch[key][mask].to(self.device)})
         ray_batch_list = [static_ray_batch] + [{} for i in range(self.train_dataset.dynamic_object_counter)]
         ray_bundles_list = [RayBundle(
             origins=static_ray_batch['rays_o'],
             directions=static_ray_batch['rays_d'],
             nears=None,
             fars=None,
-            # times=static_ray_batch['time_stamp'][:,None],
             times=None,
             pixel_area=None
         ) for i in range(1+self.train_dataset.dynamic_object_counter)]
         
 
         return ray_bundles_list, ray_batch_list
-
-        return ray_bundles_list, ray_batch_list
+        
     def get_train_rays_per_batch(self) -> int:
         return self.config.train_num_rays_per_batch
 

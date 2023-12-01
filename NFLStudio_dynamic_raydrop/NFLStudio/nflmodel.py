@@ -36,37 +36,16 @@ from NFLStudio.datamanager import (
 # from NFLStudio.libs.utils import interpolate_rigid_transformation
 
 
-@dataclass
-class TrainConfig:
-    lr: float = 0.005
-    verbose_interval: int = 1
-    max_iters: int = 100000
-    iter_size: int = 1  # gradient accumulation 
-    ema_decay: float = -1  # 0.95
-    clip: float =  1.0  # gradient clip
-    metric: str='d_l1'
-    weight_threshold: float = 0.1
-    max_epoch: int = 1
 
-    # d_url: float = 3.0   # depth 
-    # clamp_eps: float = 0.01  # used in GaussianNLLLoss
-    # reweight: bool = True
 
 
 @dataclass
 class NFLModelConfig(ModelConfig):
     _target: Type = field(default_factory=lambda: NFLModel)
-    nerf_model: str='ngp'
-    peak_detection: bool = False  # run peak detection over the sigma values
-    peak_threshold: float = 25
-    num_coarse_steps: int = 768  # num steps sampled per ray 
-    num_fine_steps: int = 64  # num steps up-sampled per ray,[currently let's just dis-able this]
     encoding_sdf:str =  'HashGrid'
     encoding_dir: str='SphericalHarmonics'
     activation: str='relu'  #[relu or trunc_exp]
     per_level_scale: float = 1.6
-    max_std: float = 1.6
-    min_std: float = 0.3
     device: str = 'cuda:0'
     center: Union[torch.Tensor, None] = None
     extent: Union[torch.Tensor, None] = None
@@ -75,7 +54,6 @@ class NFLModelConfig(ModelConfig):
     tsfm_vehicle_train: torch.tensor = None
     tsfm_vehicle_eval: torch.tensor = None
     save_dir: str = './save_dir/'
-    # train_config: TrainConfig = TrainConfig()
     loss: Dict[str, object] = field(default_factory=lambda:{
                                                             'd_url': 3.0, 'clamp_eps': 0.01, 'reweight': True, 
                                                             'eikonal': 0.3, "sdf": 1.0, "surface_sdf":3.0, "depth_vol":3,
@@ -84,18 +62,9 @@ class NFLModelConfig(ModelConfig):
 
 
 class NFLModel(Model):
-    # model_cfg: NFLModelConfig = NFLModelConfig()
-
     def __init__(self, config: NFLModelConfig, scene_box: SceneBox, num_train_data: int,**kwargs) -> None:
-
         super().__init__(config, scene_box, num_train_data, **kwargs)
-
         self.loss = NerfLoss(self.config)
-
-
-        # self.aabb_vehicle = aabb_vehicle
-        # print("load aabb vehicle into NFLModel: ",aabb_vehicle)
-
 
     def populate_modules(self):
         super().populate_modules()
@@ -132,7 +101,6 @@ class NFLModel(Model):
         true_vehicle_mask = ray_batch_full['vehicle_mask']
 
         outputs_static['ray_drop_prob'][true_vehicle_mask] = outputs_static['ray_drop_prob'][true_vehicle_mask].detach()#detach dynamic ray
-        # outputs_static['ray_drop_prob'] = outputs_static['ray_drop_prob'][~true_vehicle_mask]
         raydrop_prob_all = [outputs_static['ray_drop_prob'][~true_vehicle_mask]]
 
         static_ray_hit_mask = ray_batch_full['static_mask'].bool()

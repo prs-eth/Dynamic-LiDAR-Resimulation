@@ -254,18 +254,6 @@ class WaymoDynamic(Dataset):
         print('load vehicle')
 
 
-
-
-
-
-
-
-                
-
-
-
-
-
     def get_spatial_extent(self, normalize = True):
         """
         Get spatial extent of the scene [-height, -width/2, -width/2, height, width/2, width/2]

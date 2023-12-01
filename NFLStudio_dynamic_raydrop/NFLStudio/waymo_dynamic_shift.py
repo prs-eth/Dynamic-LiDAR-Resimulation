@@ -329,7 +329,7 @@ class WaymoDynamic(Dataset):
     def manipulate_vehicle(self, index=0):
         REMOVAL = False
         TRAJSHIFT = False
-        INSERT = True
+        INSERT = False
         if self.split == 'test':
             print("REMOVAL:", REMOVAL)
             print("TRAJSHIFT:", TRAJSHIFT)

@@ -209,13 +209,6 @@ class NFLPipeline(Pipeline):
                     pcd_est_frame.append((batch['rays_o'][mask] + batch['rays_d'][mask] * results['depth_vol_c'][:,None][mask])*self.datamanager.train_dataset.extent)        
                     dist_gt_frame.append(batch['first_dist'][mask]*self.datamanager.train_dataset.extent)     
                     dist_est_frame.append(results['depth_vol_c'][mask]*self.datamanager.train_dataset.extent)     
-                
-                    # decay_rate = self.datamanager.train_count / self.model.config.train_config.max_iters
-                    # results['coarse']['decay_rate'] = decay_rate
-                    loss_dict, metrics_dict = self.model.get_loss_dict(results, batch, "val",step, 3)
-                    # mean += metrics_dict['depth_vol_mean'].item()
-                    # median += metrics_dict['depth_vol_median']
-                    # cd += metrics_dict['chamfer_dist_vol']
 
                 pcd_gt_frame = torch.cat(pcd_gt_frame, dim=0)    
                 pcd_est_frame = torch.cat(pcd_est_frame, dim=0)    
@@ -227,12 +220,6 @@ class NFLPipeline(Pipeline):
                 dist_gt.append(dist_gt_frame)
                 dist_est.append(dist_est_frame)
 
-            # mean /=  (length_per_frame * 10// batch_size) / 100
-
-             
-
-            # pcd_gt = torch.cat(pcd_gt, dim=0)    
-            # pcd_est = torch.cat(pcd_est, dim=0)    
             dist_gt_all = torch.cat(dist_gt, dim=0)    
             dist_est_all = torch.cat(dist_est, dim=0)    
             error_abs = torch.abs(dist_est_all-dist_gt_all)*100
@@ -241,16 +228,10 @@ class NFLPipeline(Pipeline):
                 dist1, dist2 = dist1**0.5, dist2**0.5
                 cd += dist1.mean().detach() + dist2.mean().detach()
 
-                median += torch.abs(dist_gt[i] - dist_est[i]).median()
-
-
             cd /= (frame_num) / 100
             mean = error_abs.mean()
             median = error_abs.median()
            
-
-
-
             print("mean: ", mean )
             print("median: ", median )
             print("cd: ", cd ) 
