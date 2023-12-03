@@ -143,41 +143,41 @@ class NFLPipeline(Pipeline):
         self.train()
         return model_outputs, loss_dict, metrics_dict
     
-    @profiler.time_function
-    def get_test_loss_dict(self, step: int):
-        """This function gets your evaluation loss dict. It needs to get the data
-        from the DataManager and feed it to the model's forward function
+    # @profiler.time_function
+    # def get_test_loss_dict(self, step: int):
+    #     """This function gets your evaluation loss dict. It needs to get the data
+    #     from the DataManager and feed it to the model's forward function
 
-        Args:
-            step: current iteration step
-        """
-        with torch.no_grad():
-            phase = 'test'
-            self.eval()
-            batch_size = self.datamanager.eval_loader.batch_size
-            results=None
-            batch_full = None
-            for i in range(2650*64 // batch_size):
-                ray_bundle, batch = self.datamanager.next_eval(step)
-                model_outputs = self.model(ray_bundle, batch)
-                if results is None:
-                    results = model_outputs
-                if batch_full is None:
-                    batch_full = batch    
-                else:
-                    for key, value in model_outputs.items():
-                        if key=='ratio': continue
-                        results[key] = torch.cat((results[key], value), dim=0)
-                    for key, value in batch.items():
-                        batch_full[key] = torch.cat((batch_full[key], value), dim=0)      
+    #     Args:
+    #         step: current iteration step
+    #     """
+    #     with torch.no_grad():
+    #         phase = 'test'
+    #         self.eval()
+    #         batch_size = self.datamanager.eval_loader.batch_size
+    #         results=None
+    #         batch_full = None
+    #         for i in range(2650*64 // batch_size):
+    #             ray_bundle, batch = self.datamanager.next_eval(step)
+    #             model_outputs = self.model(ray_bundle, batch)
+    #             if results is None:
+    #                 results = model_outputs
+    #             if batch_full is None:
+    #                 batch_full = batch    
+    #             else:
+    #                 for key, value in model_outputs.items():
+    #                     if key=='ratio': continue
+    #                     results[key] = torch.cat((results[key], value), dim=0)
+    #                 for key, value in batch.items():
+    #                     batch_full[key] = torch.cat((batch_full[key], value), dim=0)      
                             
                 
-            metrics_dict = self.model.get_metrics_dict(results, batch)
-            decay_rate = self.datamanager.train_count / self.model.config.train_config.max_iters
-            results['coarse']['decay_rate'] = decay_rate
-            loss_dict, metrics_dict = self.model.get_loss_dict(results, batch_full, phase,step, 3)
-            # self.eval_count += 1
-            return model_outputs, loss_dict, metrics_dict
+    #         metrics_dict = self.model.get_metrics_dict(results, batch)
+    #         decay_rate = self.datamanager.train_count / self.model.config.train_config.max_iters
+    #         results['coarse']['decay_rate'] = decay_rate
+    #         loss_dict, metrics_dict = self.model.get_loss_dict(results, batch_full, phase,step, 3)
+    #         # self.eval_count += 1
+    #         return model_outputs, loss_dict, metrics_dict
     
     def get_numbers(self, step: int):
         """get metrics for each the scene on the test set"""

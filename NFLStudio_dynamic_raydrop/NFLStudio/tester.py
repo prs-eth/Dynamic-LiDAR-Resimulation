@@ -29,7 +29,7 @@ def _load_checkpoint(pipeline, load_dir, load_step) -> None:
 
 if __name__ == '__main__':
     pipeline = NFLPipeline(config=NFLPipelineConfig(), device="cuda", world_size=1)
-    load_dir = f'path/to/nerfstudio_models' # select the weights folder
+    load_dir = f'/scratch/hanfeng/LidarSimStudio/NFLStudio_dynamic_raydrop/outputs/5' # select the weights folder
     load_dir = Path(load_dir)
     for load_step in sorted(int(x[x.find("-") + 1 : x.find(".")]) for x in os.listdir(load_dir))[-1:]:
         print(load_step)
@@ -37,4 +37,4 @@ if __name__ == '__main__':
         pipeline.model.nfl_field.set_cos_anneal_ratio(min(1.0, load_step/40000))
         
         # pipeline.get_numbers() # get numbers of the LiDARs
-        pipeline.get_pcd(context_name)# get pcd to display
+        # pipeline.get_pcd(context_name)# get pcd to display

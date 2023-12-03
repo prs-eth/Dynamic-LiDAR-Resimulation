@@ -25,6 +25,10 @@ class NFLField(Field): ## with SDF
                  extent = 100,  # scene extent
                  ):
         super().__init__()
+        aabb_train = torch.FloatTensor([-1, -1, -1 / 2, 1, 1, 1 / 2])
+        aabb_infer = aabb_train.clone()
+        self.register_buffer('aabb_train', aabb_train)
+        self.register_buffer('aabb_infer', aabb_infer)
         self.bound = bound
         self.scene_extent  = extent
         print("extent: ", extent)

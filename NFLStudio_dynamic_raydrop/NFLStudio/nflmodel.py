@@ -24,7 +24,8 @@ from nerfstudio.engine.callbacks import (
     TrainingCallbackAttributes,
     TrainingCallbackLocation,
 )
-from nerfstudio.model_components.ray_samplers import PDFSampler, UniformSampler, NeuSSampler
+# from nerfstudio.model_components.ray_samplers import PDFSampler, UniformSampler, NeuSSampler
+from NFLStudio.neussampler_active import NeuSSampler_active
 
 from nerfstudio.cameras.rays import Frustums, RaySamples
 from NFLStudio.loss import NerfLoss
@@ -89,8 +90,8 @@ class NFLModel(Model):
         ) for i in range(self.config.num_vehicles)])
         print('initialize vehicle fields')
 
-        self.sampler_neus = NeuSSampler(num_samples=256, num_samples_importance=256, num_upsample_steps=8)
-        self.sampler_neus_dynamic = NeuSSampler(num_samples=64, num_samples_importance=64, num_upsample_steps=4)
+        self.sampler_neus = NeuSSampler_active(num_samples=256, num_samples_importance=256, num_upsample_steps=8)
+        self.sampler_neus_dynamic = NeuSSampler_active(num_samples=64, num_samples_importance=64, num_upsample_steps=4)
         self.anneal_end = 40000
 
     def get_outputs(self, ray_bundle_list: list[RayBundle], ray_batch_list=None, intersection_ray_bundle_list=None, intersection_ray_batch_list=None, vehicle_mask_list=None):
