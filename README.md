@@ -46,3 +46,36 @@ You can set the batch-size in [NFLDataManagerConfig](./NFLStudio_dynamic_raydrop
 ## Evaluation and visulization
 After training, a folder containing weights will be saved in your working folder as `outputs/<your_experiment_name>/NFLStudio/<time_stamp>/nerfstudio_models`
 
+replace the `load_dir` in [tester](./NFLStudio_dynamic_raydrop/NFLStudio/tester.py) with `outputs/<your_experiment_name>/NFLStudio/<time_stamp>/nerfstudio_models` and replace `context_name` with <context_name> 
+
+### Numbers
+In order to get numbers for the scene, uncomment in [tester](./NFLStudio_dynamic_raydrop/NFLStudio/tester.py)
+```
+# pipeline.get_numbers() # get numbers of the LiDARs
+```
+and run
+```
+cd NFLStudio
+python tester.py
+```
+
+### Visulization
+In order to visulize for the scene, uncomment in [tester](./NFLStudio_dynamic_raydrop/NFLStudio/tester.py)
+```
+# pipeline.get_pcd(context_name) # get pcd to display
+```
+and run
+```
+cd NFLStudio
+python tester.py
+```
+
+After that, you will have a folder in `NFLStudio` called `pcd_out`.
+
+replace the `dir` and `context_name` with `path/to/pcd_out` and <context_name> in [NFLStudio/render_full_lidar_inputs.py](./NFLStudio_dynamic_raydrop/NFLStudio/render_full_lidar_inputs.py)
+
+and run
+```
+cd NFLStudio
+python render_full_lidar_inputs.py
+```
