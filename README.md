@@ -75,6 +75,8 @@ and run
 cd NFLStudio
 python render_full_lidar_inputs.py
 ```
+It will generate two windows like follows:
+![vis](figs/vis.png)
 ## Citation
 ```bibtex
 @article{Wu2023dynfl,
