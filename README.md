@@ -11,25 +11,23 @@ This code consists of two parts. The folder `NFLStudio_dynamic_raydrop` contains
 
 ## Enrionment setup
 This code has been tested on 
-- Python 3.10.10, PyTorch 1.13.1, CUDA 11.6, Nerfstudio 0.3.4 GeForce RTX 3090/GeForce GTX 1080Ti
+- Python 3.10.10, PyTorch 1.13.1, CUDA 11.6, Nerfstudio 0.3.4, GeForce RTX 3090/GeForce GTX 1080Ti
 
 To create a conda environment and install the required dependences please run:
 ```shell
-git clone git@github.com:prs-eth/DyNFL-Dynamic-LiDAR-Re-simulation-using-Compositional-Neural-Fields.git
-
 conda create -n "dynfl" python=3.10.10
 conda activate dynfl
+```
+Then install nerfstudio from [official guidelines](https://docs.nerf.studio/quickstart/installation.html) in your conda environment.
 
-pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116
-
-pip install git+https://github.com/NVlabs/tiny-cuda-nn/#subdirectory=bindings/torch
-
+After intalling nerfstudio, install DyNFL and required packages as follows:
+```
+git clone git@github.com:prs-eth/DyNFL-Dynamic-LiDAR-Re-simulation-using-Compositional-Neural-Fields.git
 cd NFLStudio_dynamic_raydrop
 pip install -e .
 
 pip install NFLStudio/ChamferDistancePytorch/chamfer3D/
 pip install NFLStudio/raymarching/
-
 ```
 in your working folder.
 
@@ -79,3 +77,14 @@ and run
 cd NFLStudio
 python render_full_lidar_inputs.py
 ```
+## Citation
+```bibtex
+@article{Wu2023dynfl,
+        title={Dynamic LiDAR Re-simulation using Compositional Neural Fields},
+        author={Wu, Hanfeng and Zuo, Xingxing and Leutenegger, Stefan and Litany, Or and Schindler, Konrad and Huang, Shengyu},
+        journal={arXiv preprint},
+        year={2023}
+    }
+```
+## Acknowledgement
+Or Litany is a Taub fellow and is supported by the Azrieli Foundation Early Career Faculty Fellowship

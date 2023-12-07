@@ -23,7 +23,7 @@ you can download as many contexts as you want, our preprocess handle one context
 We use python 3.10.10, python version under 3.9 would not work afaik
 
 ```
-conda create -n waymov2 python=3.10
+conda create -n waymov2 python=3.10.10
 conda activate waymov2
 python3 -m pip install gcsfs waymo-open-dataset-tf-2-11-0==1.5.1
 pip install torch==1.13.1 torchvision functorch --extra-index-url https://download.pytorch.org/whl/cu117
@@ -62,5 +62,9 @@ processed_data_dynamic
     ├── ray_origins.npy
     └── valid_normal_flags.npy
 ```
+
+## Preprocessed data
+We preprocessed 5 scenes in advance if you would like to skip running the script on your end.
+
 
         
