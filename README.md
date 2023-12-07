@@ -87,4 +87,4 @@ It will generate two windows like follows:
     }
 ```
 ## Acknowledgement
-Or Litany is a Taub fellow and is supported by the Azrieli Foundation Early Career Faculty Fellowship
+We use the nerfstudio framework in this project, we thank the contributors for their open-sourcing and maintenance of the work. 
