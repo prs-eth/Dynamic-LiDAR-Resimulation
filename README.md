@@ -1,7 +1,7 @@
 ## Dynamic LiDAR Re-simulation using Compositional Neural Fields
 This repository represents the official implementation of the paper:
 
-### [Dynamic LiDAR Re-simulation using Compositional Neural Fields]()
+### [Dynamic LiDAR Re-simulation using Compositional Neural Fields](https://arxiv.org/abs/2312.05247)
 
 [Hanfeng Wu<sup>1,2</sup>](https://www.linkedin.com/in/hanfeng-wu-089602203/), [Xingxing Zuo<sup>2</sup>](https://xingxingzuo.github.io/), [Stefan Leutenegger<sup>2</sup>](https://www.professoren.tum.de/leutenegger-stefan), [Or Litany<sup>3</sup>](https://orlitany.github.io/), [Konrad Schindler<sup>1</sup>](https://prs.igp.ethz.ch/group/people/person-detail.schindler.html), [Shengyu Huang<sup>1</sup>](https://shengyuh.github.io) \
 <sup>1</sup> ETH Zurich | <sup>2</sup> Technical University of Munich | <sup>3</sup> Technion | <sup>4</sup> NVIDIA
