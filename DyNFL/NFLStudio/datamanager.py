@@ -15,12 +15,12 @@ class NFLDataManagerConfig(DataManagerConfig):
 #     """Target class to instantiate."""
     dataparser_config: NFLDataParserConfig = NFLDataParserConfig()
 #     """Specifies the dataparser used to unpack the data."""
-    train_num_rays_per_batch: int = 2048
+    train_num_rays_per_batch: int = 4096
 #     """Number of rays per batch to use per training iteration."""
     shuffle: bool = True
     num_workers: int = 8
 
-    eval_num_rays_per_batch: int = 2048
+    eval_num_rays_per_batch: int = 4096
     """Number of rays per batch to use per eval iteration."""
 
 class NFLDataManager(DataManager):
