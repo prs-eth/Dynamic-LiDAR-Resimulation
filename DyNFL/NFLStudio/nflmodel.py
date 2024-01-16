@@ -52,8 +52,8 @@ class NFLModelConfig(ModelConfig):
     extent: Union[torch.Tensor, None] = None
     num_vehicles: int = 0
     aabb_vehicle: List[torch.tensor] = field(default_factory=list)
-    tsfm_vehicle_train: torch.tensor = None
-    tsfm_vehicle_eval: torch.tensor = None
+    tsfm_vehicle_train: Union[torch.Tensor, None] = None
+    tsfm_vehicle_eval: Union[torch.Tensor, None] = None
     save_dir: str = './save_dir/'
     loss: Dict[str, object] = field(default_factory=lambda:{
                                                             'd_url': 3.0, 'clamp_eps': 0.01, 'reweight': True, 
@@ -360,6 +360,7 @@ class NFLModel(Model):
 
     
         return self.get_outputs_eval(ray_bundle_list, ray_batch_list, vehicle_mask_list)
+    
     def forward(self, ray_bundle_list: list[RayBundle], ray_batch_list=None, train=True) -> Dict[str, torch.Tensor]:
         """Run forward starting with a ray bundle. This outputs different things depending on the configuration
         of the model and whether or not the batch is provided (whether or not we are training basically)

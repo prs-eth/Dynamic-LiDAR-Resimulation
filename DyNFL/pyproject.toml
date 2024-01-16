@@ -7,7 +7,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["NFLStudio*","NFLStudio.NFL*", "NFLStudio.lidarsim*"]
+include = ["NFLStudio*", "NFLStudio.lidarsim*"]
 
 [project.entry-points.'nerfstudio.method_configs']
 my-method = 'NFLStudio.my_config:NFLStudio'

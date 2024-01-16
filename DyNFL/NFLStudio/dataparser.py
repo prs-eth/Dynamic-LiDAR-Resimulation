@@ -43,7 +43,7 @@ class NFLDataParserConfig(DataParserConfig):
     _target: Type = field(default_factory=lambda: NFLDataParser)
     """target class to instantiate"""
     context_name: str = '1005081002024129653_5313_150_5333_150'
-    root_dir: str = "/scratch/hanfeng/LidarSimStudio/processed_data_dynamic"
+    root_dir: str = "/cluster/work/igp_psr/hanfeng/LidarSimStudio/processed_data_dynamic"
     min_near: float = 2.75  # minimum near distance to sample rays in meters
     max_dist: float = 75 #maximum distance 
     scene_size: int = 50

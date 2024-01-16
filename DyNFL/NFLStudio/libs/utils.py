@@ -7,14 +7,14 @@ Last modified: 30.11.2023
 
 import os,re,sys,json,yaml,random, argparse, torch, pickle, imageio
 import numpy as np
-try:
-    import open3d as o3d
-except:
-    print('fail to import open3d')
-try:
-    import cv2
-except:
-    print('fail to import cv2')
+# try:
+#     import open3d as o3d
+# except:
+#     print('fail to import open3d')
+# try:
+#     import cv2
+# except:
+#     print('fail to import cv2')
 import multiprocessing as mp
 from tqdm import tqdm
 count_job = 0

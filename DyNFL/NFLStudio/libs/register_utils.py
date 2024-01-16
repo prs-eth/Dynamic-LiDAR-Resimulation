@@ -2,10 +2,10 @@
 from sklearn.cluster import DBSCAN
 import pickle, torch, math
 from NFLStudio.libs.utils import to_o3d_pcd, load_yaml, load_pkl
-try:
-    import open3d as o3d
-except:
-    print('fail to import open3d')
+# try:
+#     import open3d as o3d
+# except:
+#     print('fail to import open3d')
 import numpy as np
 
 # defaultConfigs = load_yaml('configs/default.yaml')

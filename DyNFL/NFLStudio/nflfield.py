@@ -192,6 +192,10 @@ class NFLField(Field): ## with SDF
         c = prev_cdf ** 2
 
         alpha = ((p + 1e-6) / (c + 1e-6)).clip(0.0, 1.0)
+        # p = prev_cdf  - next_cdf 
+        # c = prev_cdf 
+
+        # alpha = ((p + 1e-5) / (c + 1e-5)).clip(0.0, 1.0)
 
         return alpha
 
