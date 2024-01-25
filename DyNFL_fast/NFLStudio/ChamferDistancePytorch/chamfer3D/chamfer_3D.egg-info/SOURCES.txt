@@ -1,0 +1,7 @@
+setup.py
+/scratch/hanfeng/NFL/ChamferDistancePytorch/chamfer3D/chamfer3D.cu
+/scratch/hanfeng/NFL/ChamferDistancePytorch/chamfer3D/chamfer_cuda.cpp
+chamfer_3D.egg-info/PKG-INFO
+chamfer_3D.egg-info/SOURCES.txt
+chamfer_3D.egg-info/dependency_links.txt
+chamfer_3D.egg-info/top_level.txt
