@@ -277,7 +277,8 @@ class NFLField(Field): ## with SDF
         }
 
         return results
-
+    
+    @torch.autocast(device_type="cuda")
     def forward(self, ray_samples: RaySamples, compute_normals: bool = False, rays_batch=None):
         """Evaluates the field at points along the ray.
 

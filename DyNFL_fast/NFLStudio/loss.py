@@ -20,7 +20,7 @@ class NerfLoss(NeRFBaseLoss):
     def get_eikonal_loss(self, inputs, outputs, results, epoch):
         mask = torch.logical_or(inputs['static_mask'].bool(), inputs['vehicle_mask'].bool())
         eik_grad_coarse = outputs['gradient_sdf_coarse']
-        results['eikonal'] =  eik_grad_coarse[mask].mean().half()
+        results['eikonal'] =  eik_grad_coarse[mask].mean()
         results['dynamic_eikonal'] =  eik_grad_coarse[inputs['vehicle_mask'].bool()].mean()
 
 
@@ -32,7 +32,7 @@ class NerfLoss(NeRFBaseLoss):
         depth_from_vol = outputs['depth_vol_c'][mask] * self.extent  # depth from truncated volumetric rendering
         depth_dynamic = outputs['depth_vol_c'][dynamic_mask].detach() * self.extent
 
-        results['depth_vol'] = self.l1_loss(depth_from_vol.half(), dist_1.half())
+        results['depth_vol'] = self.l1_loss(depth_from_vol, dist_1)
 
         depth_vol = outputs['depth_vol_c'][mask].detach() * self.extent
         error_1 = torch.abs(depth_vol - dist_1)
@@ -50,7 +50,7 @@ class NerfLoss(NeRFBaseLoss):
         surface_sdf = outputs['surface_sdf'][mask]*self.extent
         dynamic_surface_sdf = outputs['surface_sdf'][inputs['vehicle_mask'].bool()]*self.extent
 
-        results['surface_sdf'] = self.l1_loss(surface_sdf.half(), torch.zeros_like(surface_sdf))
+        results['surface_sdf'] = self.l1_loss(surface_sdf, torch.zeros_like(surface_sdf))
         results['dynamic_surface_sdf'] = self.l1_loss(dynamic_surface_sdf, torch.zeros_like(dynamic_surface_sdf))
 
     def get_vehicle_mask_loss(self, inputs, outputs, results):
@@ -69,7 +69,7 @@ class NerfLoss(NeRFBaseLoss):
 
     def get_intensity_loss(self, inputs, outputs, results, epoch):
         mask = torch.logical_or(inputs['static_mask'].bool(), inputs['vehicle_mask'].bool())
-        gt_intensity = inputs['first_intensity'][mask].half()
+        gt_intensity = inputs['first_intensity'][mask]
         est_intensity = outputs['intensity'][mask]
         
 
@@ -81,7 +81,7 @@ class NerfLoss(NeRFBaseLoss):
 
         # 2）think about more meaningful error measurements here
         results['i_l1'] = i_l1
-        results['i_l2'] = i_l2.half()
+        results['i_l2'] = i_l2
         results['i_med_rel_error'] = (torch.abs(gt_intensity - est_intensity) / gt_intensity).median()
         results['i_mean_rel_error'] = (torch.abs(gt_intensity - est_intensity) / gt_intensity).mean()
     

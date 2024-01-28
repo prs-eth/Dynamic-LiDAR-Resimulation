@@ -38,6 +38,7 @@ NFLStudio = MethodSpecification(
     steps_per_eval_image=0,
     steps_per_eval_all_images=0,
     save_only_latest_checkpoint=True,
+    mixed_precision=True,
   ),
   description="Custom description",
 

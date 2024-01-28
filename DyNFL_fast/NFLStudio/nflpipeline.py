@@ -179,6 +179,27 @@ class NFLPipeline(Pipeline):
     #         loss_dict, metrics_dict = self.model.get_loss_dict(results, batch_full, phase,step, 3)
     #         # self.eval_count += 1
     #         return model_outputs, loss_dict, metrics_dict
+
+    def runtime(self):
+        """get metrics for each the scene on the test set"""
+        with torch.no_grad():
+            cd_metric = chamfer_3DDist()
+            phase = 'val'
+            self.eval()
+            batch_size = self.datamanager.test_loader.batch_size
+            length_per_frame = 2650*64
+            frame_num = 10
+            total_time = 0
+            with torch.no_grad():
+                for f in range(frame_num):
+                    for i in range( length_per_frame// batch_size):
+                        ray_bundle_list, batch_list = self.datamanager.next_test(0)
+                        s = time.time()
+                        results = self.model(ray_bundle_list, batch_list)
+                        e = time.time()
+                        total_time += e-s
+            print("average_time_per_frame: ", total_time/frame_num, " seconds")
+
     
     def get_numbers(self):
         """get metrics for each the scene on the test set"""

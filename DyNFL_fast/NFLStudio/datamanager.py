@@ -65,7 +65,7 @@ class NFLDataManager(DataManager):
         self.test_dataparser_outputs =self.dataparser.get_dataparser_outputs(split='test') 
         self.test_dataset = self.test_dataparser_outputs.custom_dataset
         self.test_loader = DataLoader(self.test_dataset, 
-                                    batch_size=2650*8,
+                                    batch_size=2650*16,
                                     shuffle=False,
                                     num_workers=config.num_workers)
         self.iter_test_loader = iter(self.test_loader) 

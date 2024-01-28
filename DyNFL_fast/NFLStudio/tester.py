@@ -5,7 +5,7 @@ from NFLStudio.nflpipeline import *
 import os
 import argparse
 # context_name = '1005081002024129653_5313_150_5333_150'
-# context_name = '1083056852838271990_4080_000_4100_000'
+context_name = '1083056852838271990_4080_000_4100_000'
 # context_name = '13271285919570645382_5320_000_5340_000'
 # context_name = '10072140764565668044_4060_000_4080_000'
 # context_name = '10500357041547037089_1474_800_1494_800'
@@ -44,5 +44,6 @@ if __name__ == '__main__':
         _load_checkpoint(pipeline, load_dir, load_step)
         pipeline.model.nfl_field.set_cos_anneal_ratio(min(1.0, load_step/40000))
         
-        pipeline.get_numbers() # get numbers of the LiDARs
+        # pipeline.get_numbers() # get numbers of the LiDARs
+        pipeline.runtime() # get numbers of the LiDARs
         # pipeline.get_pcd(context_name)# get pcd to display

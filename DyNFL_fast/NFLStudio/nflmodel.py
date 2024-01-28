@@ -267,10 +267,10 @@ class NFLModel(Model):
             nears = nears[:,None].to(self.device)
             fars = fars[:,None].to(self.device)
             intersection_ray_bundle_list.append(RayBundle(
-                nears=nears.half(),
-                fars=fars.half(),
-                origins=ray_o_transformed.half(),
-                directions=ray_d_transformed.half(),
+                nears=nears,
+                fars=fars,
+                origins=ray_o_transformed,
+                directions=ray_d_transformed,
                 times=None,
                 pixel_area=None
             ))
@@ -331,10 +331,10 @@ class NFLModel(Model):
                                                          self.min_near)
             nears = nears[:,None].to(self.device)
             fars = fars[:,None].to(self.device)
-            ray_bundle_list[i].nears = nears.half()
-            ray_bundle_list[i].fars = fars.half()
-            ray_bundle_list[i].origins = ray_o_transformed.half()
-            ray_bundle_list[i].directions = ray_d_transformed.half()
+            ray_bundle_list[i].nears = nears
+            ray_bundle_list[i].fars = fars
+            ray_bundle_list[i].origins = ray_o_transformed
+            ray_bundle_list[i].directions = ray_d_transformed
         
 
         # compare nears, 
@@ -360,6 +360,28 @@ class NFLModel(Model):
 
     
         return self.get_outputs_eval(ray_bundle_list, ray_batch_list, vehicle_mask_list)
+
+    def _forwards_eval_static(self, ray_bundle_list: list[RayBundle], ray_batch_list=None) -> Dict[str, torch.Tensor]:
+        aabb_static = torch.tensor([-1.,-1.,-1/2,1.,1.,1/2]).float().to(self.device)
+        ray_batch_full = ray_batch_list[0]
+        nears, fars = raymarching.near_far_from_aabb(ray_batch_list[0]['rays_o'], 
+                                                     ray_batch_list[0]['rays_d'], 
+                                                     aabb_static, 
+                                                     self.min_near)
+
+        
+        nears = nears[:,None].to(self.device)
+        fars = fars[:,None].to(self.device)
+        ray_bundle_list[0].nears = nears
+        ray_bundle_list[0].fars = fars
+        
+        return self.get_outputs_eval_static(ray_bundle_list, ray_batch_list)
+    
+    def get_outputs_eval_static(self, ray_bundle_list: list[RayBundle], ray_batch_list=None, vehicle_mask_list=None):
+        ray_samples_static = self.sampler_neus(ray_bundle=ray_bundle_list[0], sdf_fn=self.nfl_field.get_sdf)
+        outputs_static = self.nfl_field.forward(ray_samples_static, rays_batch=ray_batch_list[0])
+        return outputs_static  
+
     def forward(self, ray_bundle_list: list[RayBundle], ray_batch_list=None, train=True) -> Dict[str, torch.Tensor]:
         """Run forward starting with a ray bundle. This outputs different things depending on the configuration
         of the model and whether or not the batch is provided (whether or not we are training basically)
@@ -371,7 +393,8 @@ class NFLModel(Model):
         # if True:
             return self._forwards_train(ray_bundle_list, ray_batch_list)
         else:
-            return self._forwards_eval(ray_bundle_list,ray_batch_list)
+            # return self._forwards_eval(ray_bundle_list,ray_batch_list)
+            return self._forwards_eval_static(ray_bundle_list,ray_batch_list)
 
 
     
