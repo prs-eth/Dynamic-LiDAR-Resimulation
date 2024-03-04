@@ -79,11 +79,11 @@ It will generate two windows like follows:
 ![vis](figs/vis.png)
 ## Citation
 ```bibtex
-@article{Wu2023dynfl,
+@inproceedings{Wu2023dynfl,
         title={Dynamic LiDAR Re-simulation using Compositional Neural Fields},
         author={Wu, Hanfeng and Zuo, Xingxing and Leutenegger, Stefan and Litany, Or and Schindler, Konrad and Huang, Shengyu},
-        journal={arXiv preprint},
-        year={2023}
+        booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+        year      = {2024},
     }
 ```
 ## Acknowledgement
