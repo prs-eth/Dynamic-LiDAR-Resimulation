@@ -7,6 +7,7 @@ from NFLStudio import raymarching
 from NFLStudio.dataparser import (
     NFLDataParserConfig
 )
+import torch
 @dataclass
 class NFLDataManagerConfig(DataManagerConfig):
     """A basic data manager"""
@@ -37,6 +38,8 @@ class NFLDataManager(DataManager):
         device: Union[torch.device, str] = "cpu",
     ):
         super().__init__()
+        
+        torch.manual_seed(49)
         self.dataparser = NFLDataParser(config.dataparser_config)
         self.train_dataparser_outputs = self.dataparser.get_dataparser_outputs(split='train')
         self.eval_dataparser_outputs = self.dataparser.get_dataparser_outputs(split='val')
@@ -65,7 +68,7 @@ class NFLDataManager(DataManager):
         self.test_dataparser_outputs =self.dataparser.get_dataparser_outputs(split='test') 
         self.test_dataset = self.test_dataparser_outputs.custom_dataset
         self.test_loader = DataLoader(self.test_dataset, 
-                                    batch_size=2650*2,
+                                    batch_size=2650*8,
                                     shuffle=False,
                                     num_workers=config.num_workers)
         self.iter_test_loader = iter(self.test_loader) 

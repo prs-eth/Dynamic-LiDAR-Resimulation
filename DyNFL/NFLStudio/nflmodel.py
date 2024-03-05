@@ -360,6 +360,7 @@ class NFLModel(Model):
 
     
         return self.get_outputs_eval(ray_bundle_list, ray_batch_list, vehicle_mask_list)
+    
     def forward(self, ray_bundle_list: list[RayBundle], ray_batch_list=None, train=True) -> Dict[str, torch.Tensor]:
         """Run forward starting with a ray bundle. This outputs different things depending on the configuration
         of the model and whether or not the batch is provided (whether or not we are training basically)

@@ -11,6 +11,7 @@ from NFLStudio.ChamferDistancePytorch.chamfer3D.dist_chamfer_3D import chamfer_3
 import os
 import numpy as np
 from tqdm import tqdm
+import time
 @dataclass
 class NFLPipelineConfig(cfg.InstantiateConfig):
     """Configuration for pipeline instantiation"""
@@ -179,7 +180,7 @@ class NFLPipeline(Pipeline):
     #         # self.eval_count += 1
     #         return model_outputs, loss_dict, metrics_dict
     
-    def get_numbers(self, step: int):
+    def get_numbers(self):
         """get metrics for each the scene on the test set"""
         with torch.no_grad():
             cd_metric = chamfer_3DDist()
@@ -194,35 +195,61 @@ class NFLPipeline(Pipeline):
             pcd_est = []
             dist_gt = []
             dist_est = []
+            dist_gt_vehicle = []
+            dist_est_vehicle = []
+            in_gt=[]
+            in_est=[]
             frame_num = 10
             for f in range(frame_num):
                 pcd_gt_frame = []
                 pcd_est_frame = []
                 dist_gt_frame = []
                 dist_est_frame = []
+                dist_gt_vehicle_frame = []
+                dist_est_vehicle_frame = []
                 for i in range( length_per_frame// batch_size):
-                    ray_bundle_list, batch_list = self.datamanager.next_test(step)
+                    ray_bundle_list, batch_list = self.datamanager.next_test(0)
+                    s = time.time()
                     results = self.model(ray_bundle_list, batch_list)
+                    e = time.time()
                     batch = batch_list[0]     
                     mask = torch.logical_or(batch['static_mask'].bool(), batch['vehicle_mask'].bool())
+                    vehicle_mask = batch['vehicle_mask'].bool()
                     pcd_gt_frame.append((batch['rays_o'][mask] + batch['rays_d'][mask] * batch['first_dist'][:,None][mask])*self.datamanager.train_dataset.extent)             
                     pcd_est_frame.append((batch['rays_o'][mask] + batch['rays_d'][mask] * results['depth_vol_c'][:,None][mask])*self.datamanager.train_dataset.extent)        
                     dist_gt_frame.append(batch['first_dist'][mask]*self.datamanager.train_dataset.extent)     
-                    dist_est_frame.append(results['depth_vol_c'][mask]*self.datamanager.train_dataset.extent)     
+                    dist_est_frame.append(results['depth_vol_c'][mask]*self.datamanager.train_dataset.extent)
+                    dist_gt_vehicle_frame.append(batch['first_dist'][vehicle_mask]*self.datamanager.train_dataset.extent)     
+                    dist_est_vehicle_frame.append(results['depth_vol_c'][vehicle_mask]*self.datamanager.train_dataset.extent)
+                    in_gt.append(batch['first_intensity'][mask])     
+                    in_est.append(results['intensity'][mask])
+                         
+
 
                 pcd_gt_frame = torch.cat(pcd_gt_frame, dim=0)    
                 pcd_est_frame = torch.cat(pcd_est_frame, dim=0)    
                 dist_gt_frame = torch.cat(dist_gt_frame, dim=0)    
-                dist_est_frame = torch.cat(dist_est_frame, dim=0)    
+                dist_est_frame = torch.cat(dist_est_frame, dim=0)  
+                dist_gt_vehicle_frame = torch.cat(dist_gt_vehicle_frame, dim=0)    
+                dist_est_vehicle_frame = torch.cat(dist_est_vehicle_frame, dim=0)  
 
                 pcd_gt.append(pcd_gt_frame)
                 pcd_est.append(pcd_est_frame)
                 dist_gt.append(dist_gt_frame)
                 dist_est.append(dist_est_frame)
+                dist_gt_vehicle.append(dist_gt_vehicle_frame)
+                dist_est_vehicle.append(dist_est_vehicle_frame)
+
 
             dist_gt_all = torch.cat(dist_gt, dim=0)    
             dist_est_all = torch.cat(dist_est, dim=0)    
+            dist_gt_vehicle_all = torch.cat(dist_gt_vehicle, dim=0)    
+            dist_est_vehicle_all = torch.cat(dist_est_vehicle, dim=0)    
+            in_gt_all = torch.cat(in_gt, dim=0)
+            in_est_all = torch.cat(in_est, dim=0)
             error_abs = torch.abs(dist_est_all-dist_gt_all)*100
+            error_vehicle_abs = torch.abs(dist_gt_vehicle_all-dist_est_vehicle_all)
+            error_in_abs = torch.abs(in_gt_all - in_est_all)
             for i in range(frame_num):
                 dist1, dist2, idx1, idx2 = cd_metric(pcd_gt[i][None],pcd_est[i][None])
                 dist1, dist2 = dist1**0.5, dist2**0.5
@@ -231,10 +258,14 @@ class NFLPipeline(Pipeline):
             cd /= (frame_num) / 100
             mean = error_abs.mean()
             median = error_abs.median()
+            in_rmse = torch.sqrt((error_in_abs*error_in_abs).mean())
+            vehicle_median = error_vehicle_abs.median()
            
             print("mean: ", mean )
             print("median: ", median )
             print("cd: ", cd ) 
+            print("in_rmse: ", in_rmse)
+            print("vehicle_median: ", vehicle_median)
 
     def get_numbers_vehicles(self):
         """get metrics for each the scene on the test set"""

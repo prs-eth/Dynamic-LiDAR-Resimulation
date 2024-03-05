@@ -4,10 +4,10 @@ import numpy as np
 import os, json, torch
 import torch.nn as nn
 from NFLStudio.libs.utils import estimate_normal
-try:
-    import open3d as o3d
-except:
-    print('fail to load open3d')
+# try:
+#     import open3d as o3d
+# except:
+#     print('fail to load open3d')
 
 def get_colored_img_binary(image, min, max, mask):
     """

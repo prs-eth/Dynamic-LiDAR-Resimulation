@@ -1,0 +1,4 @@
+python tester.py --context_name "1083056852838271990_4080_000_4100_000" --model_dir "/cluster/work/igp_psr/hanfeng/Dynamic-LiDAR-Resimulation/DyNFL/outputs/1083056852838271990_4080_000_4100_000/NFLStudio/2024-01-16_144457/nerfstudio_models"
+python tester.py --context_name "13271285919570645382_5320_000_5340_000" --model_dir "/cluster/work/igp_psr/hanfeng/Dynamic-LiDAR-Resimulation/DyNFL/outputs/13271285919570645382_5320_000_5340_000/NFLStudio/2024-01-16_144436/nerfstudio_models"
+python tester.py --context_name "10072140764565668044_4060_000_4080_000" --model_dir "/cluster/work/igp_psr/hanfeng/Dynamic-LiDAR-Resimulation/DyNFL/outputs/10072140764565668044_4060_000_4080_000/NFLStudio/2024-01-16_144503/nerfstudio_models"
+python tester.py --context_name "10500357041547037089_1474_800_1494_800" --model_dir "/cluster/work/igp_psr/hanfeng/Dynamic-LiDAR-Resimulation/DyNFL/outputs/10500357041547037089_1474_800_1494_800/NFLStudio/2024-01-16_144503/nerfstudio_models"
