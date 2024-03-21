@@ -29,7 +29,8 @@ class WaymoDynamic(Dataset):
             # self.splix_idx = self.splix_idx[sample_every-1::sample_every]
             pass
         elif split == 'train':
-            self.splix_idx = np.array([idx for idx in self.splix_idx if idx not in self.splix_idx[sample_every-1::sample_every]])
+            # self.splix_idx = np.array([idx for idx in self.splix_idx if idx not in self.splix_idx[sample_every-1::sample_every]])
+            self.splix_idx = np.array([idx for idx in self.splix_idx])
             # self.splix_idx = self.splix_idx[sample_every-1::sample_every]
 
         range_images1 = np.load(self.context_dir/'range_images1.npy', allow_pickle=True).astype(dtype)[:self.scene_size,:,:]
@@ -260,7 +261,7 @@ class WaymoDynamic(Dataset):
     
 
     def manipulate_sensor(self):
-        SHIFT = False
+        SHIFT = True
         LIFT = False
         Tilt = False
         DOWNSAMPLE = False
@@ -272,7 +273,7 @@ class WaymoDynamic(Dataset):
             print("DOWNSAMPLE:", DOWNSAMPLE)
             print("UPSAMPLE:", UPSAMPLE)
             if SHIFT:
-                self.shift = np.array([1.0, 1.0, 0])[None]/self.extent
+                self.shift = np.array([0, 2.0, 0])[None]/self.extent
                 self.ray_origins +=self.shift
             if LIFT:
                 self.shift = np.array([0.0, 0.0, 1.0])[None]/self.extent
