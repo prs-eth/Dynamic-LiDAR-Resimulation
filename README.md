@@ -42,7 +42,6 @@ You can set the batch-size in [NFLDataManagerConfig](./DyNFL/NFLStudio/datamanag
 ## Evaluation and visulization
 After training, a folder containing weights will be saved in your working folder as `outputs/<your_experiment_name>/NFLStudio/<time_stamp>/nerfstudio_models`
 
-replace the `load_dir` in [tester](./DyNFL/NFLStudio/tester.py) with `outputs/<your_experiment_name>/NFLStudio/<time_stamp>/nerfstudio_models` and replace `context_name` with <context_name> 
 
 ### Quantitative results
 In order to get quantitative results, please uncomment in [tester](./DyNFL/NFLStudio/tester.py)
@@ -52,7 +51,12 @@ In order to get quantitative results, please uncomment in [tester](./DyNFL/NFLSt
 and run
 ```
 cd NFLStudio
-python tester.py
+python tester.py --context_name <context_name> --model_dir <model_dir>
+```
+
+for example
+```
+python tester.py --context_name "1083056852838271990_4080_000_4100_000" --model_dir "outputs/<your_experiment_name>/NFLStudio/<time_stamp>/nerfstudio_modelss"
 ```
 
 ### Visulization
@@ -63,7 +67,7 @@ To visulize the results, uncomment in [tester](./DyNFL/NFLStudio/tester.py)
 and run
 ```
 cd NFLStudio
-python tester.py
+python tester.py --context_name <context_name> --model_dir <model_dir>
 ```
 
 After that, you will have a folder in `NFLStudio` called `pcd_out`.
