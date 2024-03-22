@@ -28,9 +28,7 @@ class WaymoDynamic(Dataset):
         elif split == 'test':
             self.splix_idx = self.splix_idx[sample_every-1::sample_every]
         elif split == 'train':
-            # self.splix_idx = np.array([idx for idx in self.splix_idx if idx not in self.splix_idx[sample_every-1::sample_every]])
-            self.splix_idx = np.array([idx for idx in self.splix_idx])
-            # self.splix_idx = self.splix_idx[sample_every-1::sample_every]
+            self.splix_idx = np.array([idx for idx in self.splix_idx if idx not in self.splix_idx[sample_every-1::sample_every]])
 
         range_images1 = np.load(self.context_dir/'range_images1.npy', allow_pickle=True).astype(dtype)[:self.scene_size,:,:]
         range_images2 = np.load(self.context_dir/'range_images2.npy', allow_pickle=True).astype(dtype)[:self.scene_size,:,:]

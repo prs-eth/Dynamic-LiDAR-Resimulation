@@ -200,7 +200,7 @@ class NFLPipeline(Pipeline):
             in_gt=[]
             in_est=[]
             frame_num = 10
-            for f in range(frame_num):
+            for f in tqdm(range(frame_num)):
                 pcd_gt_frame = []
                 pcd_est_frame = []
                 dist_gt_frame = []
@@ -248,7 +248,7 @@ class NFLPipeline(Pipeline):
             in_gt_all = torch.cat(in_gt, dim=0)
             in_est_all = torch.cat(in_est, dim=0)
             error_abs = torch.abs(dist_est_all-dist_gt_all)*100
-            error_vehicle_abs = torch.abs(dist_gt_vehicle_all-dist_est_vehicle_all)
+            error_vehicle_abs = torch.abs(dist_gt_vehicle_all-dist_est_vehicle_all)*100
             error_in_abs = torch.abs(in_gt_all - in_est_all)
             for i in range(frame_num):
                 dist1, dist2, idx1, idx2 = cd_metric(pcd_gt[i][None],pcd_est[i][None])
