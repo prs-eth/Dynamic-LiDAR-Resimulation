@@ -59,6 +59,15 @@ for example
 python tester.py --context_name "1083056852838271990_4080_000_4100_000" --model_dir "outputs/<your_experiment_name>/NFLStudio/<time_stamp>/nerfstudio_modelss"
 ```
 
+### Reproduce our results
+We provide you the pretrained model weights of 4 Waymo Dynamic scenes to reproduce our results, the weights are avaliable [here](https://mega.nz/file/R7N3nRJT#R_avxijtzFYtxyEM_ExxSHH8AiQdA2gE8-AGxmHaxtg). Unpack the pretrained weights under `DyNFL/NFLStudio/`
+and run 
+
+```
+cd NFLStudio
+bash test.sh
+```
+
 ### Visulization
 To visulize the results, uncomment in [tester](./DyNFL/NFLStudio/tester.py)
 ```
