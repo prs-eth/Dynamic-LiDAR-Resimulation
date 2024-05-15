@@ -731,7 +731,7 @@ def interpolate_rigid_transformation(transform1, transform2, t):
     interpolated_trans = interpolate_translation(trans1, trans2, t)
 
     interpolated_transform = torch.cat([interpolated_rot, interpolated_trans.unsqueeze(-1)], dim=-1)
-    interpolated_transform = torch.cat([interpolated_transform, torch.tensor([[[0, 0, 0, 1]]], dtype=torch.float32).expand(transform1.shape[0], -1, -1)], dim=1)
+    interpolated_transform = torch.cat([interpolated_transform, torch.tensor([[[0, 0, 0, 1]]], dtype=torch.float32).to(interpolated_transform.device).expand(transform1.shape[0], -1, -1)], dim=1)
 
     return interpolated_transform
 
@@ -746,55 +746,47 @@ def rotation_matrix_to_quaternion(rot):
     Returns:
     - quat: The quaternion representation of shape (batch_size, 4)
     """
-    m00 = rot[:, 0, 0]
-    m01 = rot[:, 0, 1]
-    m02 = rot[:, 0, 2]
-    m10 = rot[:, 1, 0]
-    m11 = rot[:, 1, 1]
-    m12 = rot[:, 1, 2]
-    m20 = rot[:, 2, 0]
-    m21 = rot[:, 2, 1]
-    m22 = rot[:, 2, 2]
-
-
-  
-    trace = m00 + m11 + m22
-
-
-    if trace > 0: 
-      S = torch.sqrt(trace+1.0) * 2 # S=4*qw 
-      qw = 0.25 * S
-      qx = (m21 - m12) / S
-      qy = (m02 - m20) / S
-      qz = (m10 - m01) / S
-    elif ((m00 > m11) and (m00 > m22)):
-      S = torch.sqrt(1.0 + m00 - m11 - m22) * 2 # S=4*qx 
-      qw = (m21 - m12) / S
-      qx = 0.25 * S
-      qy = (m01 + m10) / S
-      qz = (m02 + m20) / S
-    elif (m11 > m22):
-      S = torch.sqrt(1.0 + m11 - m00 - m22) * 2 # S=4*qy
-      qw = (m02 - m20) / S
-      qx = (m01 + m10) / S
-      qy = 0.25 * S
-      qz = (m12 + m21) / S
-    else:
-      S = torch.sqrt(1.0 + m22 - m00 - m11) * 2 # S=4*qz
-      qw = (m10 - m01) / S
-      qx = (m02 + m20) / S
-      qy = (m12 + m21) / S
-      qz = 0.25 * S
+    quat_list = []
+    for idx in range(rot.size(0)):
+        m00 = rot[idx, 0, 0]
+        m01 = rot[idx, 0, 1]
+        m02 = rot[idx, 0, 2]
+        m10 = rot[idx, 1, 0]
+        m11 = rot[idx, 1, 1]
+        m12 = rot[idx, 1, 2]
+        m20 = rot[idx, 2, 0]
+        m21 = rot[idx, 2, 1]
+        m22 = rot[idx, 2, 2]
+        trace = m00 + m11 + m22
+        if trace > 0: 
+            S = torch.sqrt(trace+1.0) * 2 # S=4*qw 
+            qw = 0.25 * S
+            qx = (m21 - m12) / S
+            qy = (m02 - m20) / S
+            qz = (m10 - m01) / S
+        elif ((m00 > m11) and (m00 > m22)):
+            S = torch.sqrt(1.0 + m00 - m11 - m22) * 2 # S=4*qx 
+            qw = (m21 - m12) / S
+            qx = 0.25 * S
+            qy = (m01 + m10) / S
+            qz = (m02 + m20) / S
+        elif (m11 > m22):
+            S = torch.sqrt(1.0 + m11 - m00 - m22) * 2 # S=4*qy
+            qw = (m02 - m20) / S
+            qx = (m01 + m10) / S
+            qy = 0.25 * S
+            qz = (m12 + m21) / S
+        else:
+            S = torch.sqrt(1.0 + m22 - m00 - m11) * 2 # S=4*qz
+            qw = (m10 - m01) / S
+            qx = (m02 + m20) / S
+            qy = (m12 + m21) / S
+            qz = 0.25 * S
+        quat = torch.stack([qx, qy, qz, qw])
+        quat_list.append(quat)
     
-    # r = torch.sqrt(1 + trace) + 1e-5
-    # s = 0.5 / r
-
-    # x = (m21 - m12) * s
-    # y = (m02 - m20) * s
-    # z = (m10 - m01) * s
-    # w = 0.5 * r
-
-    quat = torch.stack([qx, qy, qz, qw], dim=-1)
+    quat = torch.stack(quat_list)
+        
     return quat
 
 
